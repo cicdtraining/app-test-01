@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  do-stuff:
+  publish-code:
     runs-on: ubuntu-latest
     steps:
 
@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Package
         run: |
-          tar cvf package.tar ./package.json ./install.js
+          tar cvf package.tar ./package.json ./index.js
 
       - name: Deploy Package
         run: aws s3 cp package.tar s3://company-deploy-bucket/my-app-01/
