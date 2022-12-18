@@ -1,0 +1,32 @@
+name: CI
+
+permissions:
+  id-token: write
+  contents: read
+    
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  do-stuff:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v2
+    
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1 # More information on this action can be found below in the 'AWS Credentials' section
+        with:
+          role-to-assume: arn:aws:iam::511447093739:role/github-oidc-role
+          aws-region: us-east-1
+
+      - name: Build Package
+        run: |
+          tar cvf package.tar ./package.json ./install.js
+
+      - name: Deploy Package
+        run: aws s3 cp package.tar s3://company-deploy-bucket/my-app-01/
+        shell: bash
